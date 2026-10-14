@@ -1,0 +1,43 @@
+{
+  "name": "Parking Spot",
+  "version": "1.0.0",
+  "color": "blue",
+  "actions": [
+    {
+      "menu": "🅿️ Parking",
+      "cases": {
+        "I parked here": [
+          {
+            "location": true,
+            "as": "here"
+          },
+          {
+            "date": "M/d HH:mm",
+            "as": "t"
+          },
+          {
+            "storage_set": "parking",
+            "value": "{{here}}"
+          },
+          {
+            "storage_set": "parking_time",
+            "value": "{{t}}"
+          },
+          {
+            "notify": "🅿️ Saved",
+            "body": "{{t}}"
+          }
+        ],
+        "Where's my car?": [
+          {
+            "storage_get": "parking",
+            "as": "p"
+          },
+          {
+            "open_url": "http://maps.apple.com/?q={{p}}"
+          }
+        ]
+      }
+    }
+  ]
+}

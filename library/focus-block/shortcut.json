@@ -1,0 +1,52 @@
+{
+  "name": "Focus Block",
+  "version": "1.0.0",
+  "color": "purple",
+  "actions": [
+    {
+      "ask": "What are you focusing on?",
+      "default": "Deep work",
+      "as": "topic"
+    },
+    {
+      "menu": "How long?",
+      "cases": {
+        "25 min": [
+          {
+            "date": "yyyy-MM-dd HH:mm",
+            "offset_minutes": 25,
+            "as": "end"
+          }
+        ],
+        "50 min": [
+          {
+            "date": "yyyy-MM-dd HH:mm",
+            "offset_minutes": 50,
+            "as": "end"
+          }
+        ],
+        "90 min": [
+          {
+            "date": "yyyy-MM-dd HH:mm",
+            "offset_minutes": 90,
+            "as": "end"
+          }
+        ]
+      }
+    },
+    {
+      "date": "yyyy-MM-dd HH:mm",
+      "as": "start"
+    },
+    {
+      "calendar_add": "🎯 {{topic}}",
+      "start": "{{start}}",
+      "end": "{{end}}",
+      "notes": "Blocked by Focus Block"
+    },
+    {
+      "notify": "🎯 Focus until {{end}}",
+      "body": "{{topic}}"
+    }
+  ]
+}

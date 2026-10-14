@@ -1,0 +1,7 @@
+{
+  "name": "영양제 체크 (원본)",
+  "version": "6.0.0",
+  "sha256": "a27f1976cac6208fda5ed161285a9296e7634efa5bd019d9310ed7efa44290a8",
+  "url": "https://raw.githubusercontent.com/Hyunki6040/shortcut-forge/main/library/supplement-check-original/%EC%98%81%EC%96%91%EC%A0%9C%20%EC%B2%B4%ED%81%AC%20%28%EC%9B%90%EB%B3%B8%29.shortcut",
+  "notes": "v6: tomorrow's reminders for all slots at once, skip existing; mcg→mg fix; separate inositol-free morning option; pre-lunch psyllium slot."
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "github-issue",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "GitHub Issue from Phone",
+  "category": "developer",
+  "tags": [
+    "github",
+    "api"
+  ],
+  "description": "File a GitHub issue from your phone. Stores repo + token in Stored Content on first run.",
+  "description_ko": "폰에서 바로 GitHub 이슈 등록. 첫 실행에 저장소와 토큰을 저장공간에 기억합니다."
+}

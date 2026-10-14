@@ -1,0 +1,14 @@
+{
+  "slug": "lunch-picker-remote",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Lunch Picker (remote list)",
+  "category": "team",
+  "tags": [
+    "remote-config",
+    "auto-update"
+  ],
+  "description": "Reads the lunch options from a JSON file on GitHub (cached daily). Edit the JSON, every phone gets the new list tomorrow, no re-download. The pattern behind the roadmap's 'update without reinstalling'.",
+  "description_ko": "점심 후보를 GitHub의 JSON에서 읽어 옵니다(하루 한 번 캐시). JSON만 고치면 모든 폰이 다음 날 새 목록을 씁니다. 재다운로드 없는 업데이트 패턴의 예시."
+}

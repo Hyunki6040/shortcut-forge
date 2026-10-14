@@ -1,0 +1,66 @@
+{
+  "name": "Grocery List",
+  "version": "1.0.0",
+  "color": "green",
+  "actions": [
+    {
+      "storage_get": "groceries",
+      "as": "list"
+    },
+    {
+      "menu": "🛒 Groceries",
+      "cases": {
+        "Add": [
+          {
+            "ask": "Item(s), comma separated",
+            "as": "items"
+          },
+          {
+            "if": [
+              "{{list}}",
+              "has any value"
+            ],
+            "then": [
+              {
+                "set": "list",
+                "to": "{{list}}, {{items}}"
+              }
+            ],
+            "else": [
+              {
+                "set": "list",
+                "to": "{{items}}"
+              }
+            ]
+          },
+          {
+            "storage_set": "groceries",
+            "value": "{{list}}"
+          },
+          {
+            "notify": "🛒 Added",
+            "body": "{{items}}"
+          }
+        ],
+        "Show": [
+          {
+            "show": "{{list}}"
+          }
+        ],
+        "Share": [
+          {
+            "share": "{{list}}"
+          }
+        ],
+        "Clear": [
+          {
+            "storage_delete": "groceries"
+          },
+          {
+            "notify": "🛒 Cleared"
+          }
+        ]
+      }
+    }
+  ]
+}

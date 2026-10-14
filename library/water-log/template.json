@@ -1,0 +1,13 @@
+{
+  "template": "water-log",
+  "config": {
+    "name": "Water",
+    "sizes_ml": [
+      200,
+      350,
+      500
+    ],
+    "goal_ml": 2000,
+    "lang": "en"
+  }
+}

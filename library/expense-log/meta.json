@@ -1,0 +1,14 @@
+{
+  "slug": "expense-log",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Expense Log",
+  "category": "money",
+  "tags": [
+    "stored-content",
+    "csv"
+  ],
+  "description": "Amount + category → a CSV line in Stored Content. Export the month to the clipboard for your spreadsheet.",
+  "description_ko": "금액과 분류를 저장공간에 CSV로 쌓고, 한 달 치를 클립보드로 내보내 시트에 붙여넣습니다."
+}

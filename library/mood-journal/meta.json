@@ -1,0 +1,15 @@
+{
+  "slug": "mood-journal",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Mood Journal",
+  "category": "wellbeing",
+  "tags": [
+    "journal",
+    "stored-content",
+    "apple-intelligence"
+  ],
+  "description": "Tap an emoji, add a line. Ask Apple Intelligence for a weekly reflection whenever you like.",
+  "description_ko": "이모지 하나와 한 줄. 원할 때 Apple Intelligence가 한 주를 돌아봐 줍니다."
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "focus-block",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Focus Block",
+  "category": "productivity",
+  "tags": [
+    "calendar",
+    "focus"
+  ],
+  "description": "Pick 25/50/90 minutes; blocks your calendar from now and tells you when it ends.",
+  "description_ko": "25/50/90분을 고르면 지금부터 캘린더를 막아두고 끝나는 시간을 알려줍니다."
+}

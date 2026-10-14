@@ -29,7 +29,7 @@
   <!-- forge box -->
   <rect x="480" y="170" width="300" height="150" rx="18" fill="#111827" stroke="#a855f7" stroke-width="2"/>
   <text x="504" y="204" font-size="15" fill="#c4b5fd">MCP · build → lint → sign</text>
-  <text x="504" y="238" font-size="16" fill="#e2e8f0" font-family="ui-monospace, Menlo, monospace">✓ 14 on-device rules</text>
+  <text x="504" y="238" font-size="16" fill="#e2e8f0" font-family="ui-monospace, Menlo, monospace">✓ 15 on-device rules</text>
   <text x="504" y="264" font-size="16" fill="#e2e8f0" font-family="ui-monospace, Menlo, monospace">✓ mcg → mg for Health</text>
   <text x="504" y="290" font-size="16" fill="#e2e8f0" font-family="ui-monospace, Menlo, monospace">✓ shortcuts sign (AEA1)</text>
 

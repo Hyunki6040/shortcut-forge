@@ -1,0 +1,14 @@
+{
+  "slug": "caffeine-log",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Caffeine Log",
+  "category": "health",
+  "tags": [
+    "apple-health",
+    "stored-content"
+  ],
+  "description": "Espresso, latte or cold brew → logs caffeine to Apple Health and warns past your daily limit.",
+  "description_ko": "에스프레소/라떼/콜드브루를 고르면 카페인을 건강 앱에 기록하고, 하루 한도를 넘으면 알려줍니다."
+}

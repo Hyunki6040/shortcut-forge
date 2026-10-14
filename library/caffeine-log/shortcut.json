@@ -1,0 +1,103 @@
+{
+  "name": "Caffeine Log",
+  "version": "1.0.0",
+  "color": "brown",
+  "actions": [
+    {
+      "date": "yyyy-MM-dd",
+      "as": "today"
+    },
+    {
+      "storage_get": "caf_date",
+      "as": "d"
+    },
+    {
+      "if": [
+        "{{d}}",
+        "is",
+        "{{today}}"
+      ],
+      "then": [
+        {
+          "storage_get": "caf_total",
+          "as": "total"
+        }
+      ],
+      "else": [
+        {
+          "set": "total",
+          "to": "0"
+        }
+      ]
+    },
+    {
+      "menu": "What did you have?",
+      "cases": {
+        "Espresso (63 mg)": [
+          {
+            "set": "mg",
+            "to": "63"
+          }
+        ],
+        "Latte (126 mg)": [
+          {
+            "set": "mg",
+            "to": "126"
+          }
+        ],
+        "Cold brew (200 mg)": [
+          {
+            "set": "mg",
+            "to": "200"
+          }
+        ],
+        "Green tea (30 mg)": [
+          {
+            "set": "mg",
+            "to": "30"
+          }
+        ]
+      }
+    },
+    {
+      "health_log": "Caffeine",
+      "value": "{{mg}}",
+      "unit": "mg"
+    },
+    {
+      "math": [
+        "{{total}}",
+        "+",
+        "{{mg}}"
+      ],
+      "as": "total"
+    },
+    {
+      "storage_set": "caf_total",
+      "value": "{{total}}"
+    },
+    {
+      "storage_set": "caf_date",
+      "value": "{{today}}"
+    },
+    {
+      "if": [
+        "{{total}}",
+        ">",
+        400
+      ],
+      "then": [
+        {
+          "notify": "☕️ {{total}} mg today",
+          "body": "Over the 400 mg guideline"
+        }
+      ],
+      "else": [
+        {
+          "notify": "☕️ Logged {{mg}} mg",
+          "body": "Today: {{total}} mg"
+        }
+      ]
+    }
+  ]
+}

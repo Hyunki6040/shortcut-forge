@@ -1,0 +1,14 @@
+{
+  "slug": "low-battery-nudge",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Low Battery Nudge",
+  "category": "automation",
+  "tags": [
+    "battery",
+    "automation"
+  ],
+  "description": "Use it as a personal automation (e.g. when battery level changes): under 20% it nudges you, under 10% it vibrates too.",
+  "description_ko": "개인용 자동화(배터리 잔량 변화 시)로 쓰세요. 20% 미만이면 알려주고, 10% 미만이면 진동까지."
+}

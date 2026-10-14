@@ -1,0 +1,14 @@
+{
+  "slug": "parking-spot",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Parking Spot",
+  "category": "travel",
+  "tags": [
+    "location",
+    "stored-content"
+  ],
+  "description": "Save where you parked; later, open it in Maps. One shortcut, two buttons.",
+  "description_ko": "주차 위치를 저장해 뒀다가 나중에 지도로 엽니다."
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Hello Claude",
+  "version": "1.0.0",
+  "actions": [
+    {
+      "storage_get": "last_name",
+      "as": "last"
+    },
+    {
+      "ask": "What's your name?",
+      "default": "{{last}}",
+      "as": "name"
+    },
+    {
+      "if": [
+        "{{name}}",
+        "contains",
+        "Claude"
+      ],
+      "then": [
+        {
+          "notify": "Hi twin",
+          "body": "Nice to meet another Claude, {{name}}"
+        }
+      ],
+      "else": [
+        {
+          "notify": "Hi",
+          "body": "Welcome, {{name}}"
+        }
+      ]
+    },
+    {
+      "storage_set": "last_name",
+      "value": "{{name}}"
+    }
+  ]
+}

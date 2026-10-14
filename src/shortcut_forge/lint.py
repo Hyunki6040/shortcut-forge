@@ -32,6 +32,7 @@ RULES = {
     "SF010": ("warning", "Variable read but never set", "Empty value at run time"),
     "SF011": ("error", "Menu items and menu branches differ", "Menu shows items that do nothing, or import fails"),
     "SF012": ("error", "Number comparison without a number value", "If condition is incomplete"),
+    "SF014": ("warning", "Get Contents of URL on every run without a daily cache", "Offline or a server hiccup aborts the whole shortcut (no try/catch in Shortcuts)"),
     "SF013": ("info", "Uses an iOS 26/27-only action", "Will not run on older iOS (and 'Use Model' needs Apple Intelligence)"),
 }
 
@@ -191,6 +192,10 @@ def lint_plist(plist: dict) -> list[Finding]:
             s = k["Value"]["string"] if isinstance(k, dict) and "Value" in k else k
             if isinstance(s, str) and "." in s.replace("￼", "") and not s.replace(".", "").replace(" ", "").isdigit():
                 add("SF006", i, ident, f"key {s!r}; fetch one level per action")
+
+        # --- network on the hot path
+        if ident == "downloadurl" and not any(b["ident"] == "conditional" for b in stack):
+            add("SF014", i, ident, "wrap it in an If that runs once a day, and cache the result")
 
         # --- setters on lists
         if ident.startswith("setters."):

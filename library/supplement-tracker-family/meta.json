@@ -1,0 +1,16 @@
+{
+  "slug": "supplement-tracker-family",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Supplement Tracker (family)",
+  "category": "health",
+  "tags": [
+    "apple-health",
+    "reminders",
+    "template",
+    "multi-user"
+  ],
+  "description": "One shortcut for the whole household: per-person slots, Health logging, idempotent reminders, 7-day AI report.",
+  "description_ko": "온 가족이 쓰는 단축어 하나. 사람별 시간대, 건강 앱 기록, 중복 없는 미리알림, 7일 AI 리포트."
+}

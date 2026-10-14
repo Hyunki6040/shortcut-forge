@@ -1,0 +1,94 @@
+{
+  "name": "Mood Journal",
+  "version": "1.0.0",
+  "color": "pink",
+  "actions": [
+    {
+      "menu": "📓 Mood Journal",
+      "cases": {
+        "Log today": [
+          {
+            "menu": "How are you?",
+            "cases": {
+              "😄 Great": [
+                {
+                  "set": "mood",
+                  "to": "great"
+                }
+              ],
+              "🙂 Okay": [
+                {
+                  "set": "mood",
+                  "to": "okay"
+                }
+              ],
+              "😐 Meh": [
+                {
+                  "set": "mood",
+                  "to": "meh"
+                }
+              ],
+              "😣 Rough": [
+                {
+                  "set": "mood",
+                  "to": "rough"
+                }
+              ]
+            }
+          },
+          {
+            "ask": "One line about today",
+            "as": "line"
+          },
+          {
+            "date": "yyyy-MM-dd EEE",
+            "as": "day"
+          },
+          {
+            "storage_get": "journal",
+            "as": "log"
+          },
+          {
+            "if": [
+              "{{log}}",
+              "has any value"
+            ],
+            "then": [
+              {
+                "set": "log",
+                "to": "{{log}}\n{{day}} {{mood}}: {{line}}"
+              }
+            ],
+            "else": [
+              {
+                "set": "log",
+                "to": "{{day}} {{mood}}: {{line}}"
+              }
+            ]
+          },
+          {
+            "storage_set": "journal",
+            "value": "{{log}}"
+          },
+          {
+            "notify": "📓 Saved",
+            "body": "{{mood}} · {{line}}"
+          }
+        ],
+        "Weekly reflection": [
+          {
+            "storage_get": "journal",
+            "as": "log"
+          },
+          {
+            "llm": "Here is my mood journal. Look only at the last 7 entries and write a kind, honest 4-line reflection with one suggestion.\n\n{{log}}",
+            "as": "ref"
+          },
+          {
+            "show": "{{ref}}"
+          }
+        ]
+      }
+    }
+  ]
+}

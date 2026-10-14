@@ -72,8 +72,9 @@ class Shortcut:
     """Accumulates actions and serializes them to a .shortcut plist."""
 
     def __init__(self, name: str = "Shortcut", *, color: str | int = "blue", glyph: int = 59511,
-                 storage_prefix: str = "", input_classes: list[str] | None = None):
+                 storage_prefix: str = "", input_classes: list[str] | None = None, version: str | None = None):
         self.name = name
+        self.version = version
         self.actions: list[dict] = []
         self.color = ICON_COLORS.get(color, color) if isinstance(color, str) else color
         self.glyph = glyph
@@ -340,6 +341,119 @@ class Shortcut:
         with self.if_(n, "<", 1):
             self.reminder_add(title, **kw)
 
+    # ------------------------------------------------------ web / device
+    def url(self, value: Value) -> Ref:
+        return self._out("url", "URL", WFURLActionURL=tok(value))
+
+    def get_url(self, url: Value, *, method: str = "GET", json_body: dict | None = None,
+                headers: dict | None = None) -> Ref:
+        """Get Contents of URL. A network error aborts the whole run (Shortcuts has no try/catch),
+        so fetch at most once a day and cache in Stored Content (see remote_config)."""
+        p: dict[str, Any] = {"WFURL": tok(url), "WFHTTPMethod": method}
+        if headers:
+            p["ShowHeaders"] = True
+            p["WFHTTPHeaders"] = _dict_field(headers)
+        if json_body is not None:
+            p["WFHTTPBodyType"] = "JSON"
+            p["WFJSONValues"] = _dict_field(json_body)
+        return self._out("downloadurl", "Contents of URL", **p)
+
+    def get_clipboard(self) -> Ref:
+        return self._out("getclipboard", "Clipboard")
+
+    def set_clipboard(self, value: Value) -> None:
+        self.add("setclipboard", WFInput=attach(self.as_ref(value)))
+
+    def speak(self, text: Value) -> None:
+        self.add("speaktext", WFText=tok(text))
+
+    def share(self, value: Value) -> None:
+        self.add("share", WFInput=attach(self.as_ref(value)))
+
+    def wait(self, seconds: float) -> None:
+        self.add("delay", WFDelayTime=seconds)
+
+    def vibrate(self) -> None:
+        self.add("vibrate")
+
+    def battery_level(self) -> Ref:
+        return self._out("getbatterylevel", "Battery Level")
+
+    def current_location(self) -> Ref:
+        return self._out("getcurrentlocation", "Current Location")
+
+    def weather(self) -> Ref:
+        return self._out("weather.currentconditions", "Weather Conditions")
+
+    def list_(self, items: list[str]) -> Ref:
+        return self._out("list", "List", WFItems=[str(i) for i in items])
+
+    def open_app(self, bundle_id: str, name: str | None = None) -> None:
+        self.add("openapp", WFAppIdentifier=bundle_id,
+                 WFSelectedApp={"BundleIdentifier": bundle_id, "Name": name or bundle_id})
+
+    def calendar_add(self, title: Value, start: Value, end: Value, *, notes: Value = None,
+                     calendar: str | None = None) -> Ref:
+        p: dict[str, Any] = {"WFCalendarItemTitle": tok(title), "WFCalendarItemStartDate": tok(start),
+                             "WFCalendarItemEndDate": tok(end)}
+        if notes is not None:
+            p["WFCalendarItemNotes"] = tok(notes)
+        if calendar:
+            p["WFCalendarItemCalendar"] = calendar
+        return self._out("addnewevent", "New Event", **p)
+
+    def raw(self, identifier: str, output: str | None = None, **params: Any) -> Ref | None:
+        """Escape hatch for any action not wrapped yet. Values that are Ref become attachments,
+        strings with {{vars}} become token strings; dicts/lists/numbers/bools pass through."""
+        conv: dict[str, Any] = {}
+        for k, v in params.items():
+            if isinstance(v, Ref):
+                conv[k] = attach(v)
+            elif isinstance(v, str) and any(isinstance(x, Ref) for x in split_parts(v)):
+                conv[k] = tok(v)
+            else:
+                conv[k] = v
+        if output:
+            return self._out(identifier, output, **conv)
+        self.add(identifier, **conv)
+        return None
+
+    # ------------------------------------------------- remote data & updates
+    def remote_config(self, url: Value, cache_key: str = "remote_config") -> Ref:
+        """Fetch JSON at most once a day, cache it in Stored Content and return a Dictionary.
+        Split code from data: change the JSON on the web and every installed copy picks it up
+        tomorrow, no re-download. Returns the cached copy on other runs."""
+        today = self.format_date("yyyy-MM-dd")
+        with self.if_(self.storage_get(cache_key + "_date"), "is", today) as br:
+            self.set_var("_RemoteRaw", self.storage_get(cache_key))
+            br.otherwise()
+            fetched = self.get_url(url)
+            with self.if_(fetched, "has any value") as b2:
+                self.storage_set(cache_key, fetched)
+                self.storage_set(cache_key + "_date", today)
+                self.set_var("_RemoteRaw", fetched)
+                b2.otherwise()
+                self.set_var("_RemoteRaw", self.storage_get(cache_key))
+        return self.to_dict("{{_RemoteRaw}}")
+
+    def update_check(self, version: str, manifest_url: Value, *, cache_key: str = "_update_checked",
+                     prompt: str = "Update available") -> None:
+        """Once a day, read a manifest {"version": "...", "url": "...", "notes": "..."} (written by
+        `shortcut-forge publish`). If the version differs, offer to open the new signed file;
+        iOS then asks to replace the installed shortcut."""
+        today = self.format_date("yyyy-MM-dd")
+        with self.if_(self.storage_get(cache_key), "is", today) as br:
+            br.otherwise()
+            self.storage_set(cache_key, today)
+            m = self.to_dict(self.get_url(manifest_url))
+            latest = self.get_value(m, "version", split_path=False)
+            with self.if_(latest, "has any value"):
+                with self.if_(latest, "is not", version):
+                    notes = self.get_value(m, "notes", split_path=False)
+                    with self.menu(f"{prompt}: {version} → {latest}\n{notes}", ["Update", "Later"]) as mu:
+                        with mu.case("Update"):
+                            self.open_url(self.get_value(m, "url", split_path=False))
+
     # ---------------------------------------------------------- control flow
     @contextlib.contextmanager
     def if_(self, left: Value, op: str, right: Value = None) -> Iterator[Branch]:
@@ -416,6 +530,18 @@ class Shortcut:
     def lint(self):
         from .lint import lint_plist
         return lint_plist(self.to_plist())
+
+
+def _dict_field(d: dict) -> dict:
+    items = []
+    for k, v in d.items():
+        if isinstance(v, bool):
+            items.append({"WFItemType": 4, "WFKey": tok(k), "WFValue": {"Value": v, "WFSerializationType": "WFNumberSubstitutableState"}})
+        elif isinstance(v, (int, float)):
+            items.append({"WFItemType": 3, "WFKey": tok(k), "WFValue": tok(str(v))})
+        else:
+            items.append({"WFItemType": 0, "WFKey": tok(k), "WFValue": tok(v)})
+    return {"Value": {"WFDictionaryFieldValueItems": items}, "WFSerializationType": "WFDictionaryFieldValue"}
 
 
 __all__ = ["Shortcut", "Branch", "Menu", "OPERATORS", "split_parts"]

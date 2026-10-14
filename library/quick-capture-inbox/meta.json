@@ -1,0 +1,14 @@
+{
+  "slug": "quick-capture-inbox",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Quick Capture",
+  "category": "productivity",
+  "tags": [
+    "reminders",
+    "gtd"
+  ],
+  "description": "One prompt, straight into an Inbox reminders list. Bind it to the Action Button.",
+  "description_ko": "한 번 입력하면 미리알림 Inbox 목록으로. 동작 버튼에 지정해 쓰세요."
+}

@@ -11,3 +11,4 @@ out/
 .DS_Store
 uv.lock
 examples/signed/
+!library/*/source.unsigned.shortcut

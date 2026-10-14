@@ -1,0 +1,15 @@
+{
+  "slug": "weather-voice-brief",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Weather Voice Brief",
+  "category": "morning",
+  "tags": [
+    "weather",
+    "speak",
+    "apple-intelligence"
+  ],
+  "description": "Reads the weather and tells you what to wear, out loud.",
+  "description_ko": "날씨를 보고 뭘 입을지 소리 내어 알려줍니다."
+}

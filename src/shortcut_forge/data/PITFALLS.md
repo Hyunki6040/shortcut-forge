@@ -18,6 +18,8 @@ The builder applies each fix automatically; the linter flags each pattern in any
 | SF009 | Output reference to an action without a UUID / deleted action | "Choose a value for each parameter" | Every action whose output is used gets a UUID. |
 | SF010 | Variable read before any Set Variable exists in the file | Silent empty value | Declare every variable, including on else-branches. |
 | SF011 | Menu items list differs from case branches | Items that do nothing | Builder adds empty branches for undeclared cases. |
+| SF014 | `Get Contents of URL` on every run | Offline or a 5xx aborts the whole shortcut (there is no try/catch) | Fetch once a day, cache in Stored Content, fall back to the cache (`remote_config`). |
+| — | Hard-coded data (doses, lists, prices) inside the shortcut | Every change means re-signing and every user re-downloading | Keep data in a JSON URL read by `remote_config`; ship code changes with `update_check`. |
 | — | Empty input to Add to List / setters | "Choose a value…" | Guard with `If … has any value`. |
 | — | History split on new lines without trimming | Counts off by one (leading blank line) | `Trim Whitespace` before `Split Text`. |
 | — | Reminder created on every run | Duplicates pile up | Search by a fixed phrase (`<user> <slot> <word> <M/d>`); create only when Count < 1. |

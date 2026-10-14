@@ -1,0 +1,77 @@
+{
+  "name": "GitHub Issue",
+  "version": "1.0.0",
+  "color": "darkblue",
+  "actions": [
+    {
+      "storage_get": "gh_repo",
+      "as": "repo"
+    },
+    {
+      "if": [
+        "{{repo}}",
+        "does not have any value"
+      ],
+      "then": [
+        {
+          "ask": "Repository (owner/name)",
+          "as": "repo"
+        },
+        {
+          "storage_set": "gh_repo",
+          "value": "{{repo}}"
+        },
+        {
+          "ask": "Fine-grained token (Issues: write)",
+          "as": "tok"
+        },
+        {
+          "storage_set": "gh_token",
+          "value": "{{tok}}"
+        }
+      ]
+    },
+    {
+      "storage_get": "gh_token",
+      "as": "tok"
+    },
+    {
+      "ask": "Issue title",
+      "as": "title"
+    },
+    {
+      "ask": "Details (optional)",
+      "as": "body"
+    },
+    {
+      "if": [
+        "{{title}}",
+        "has any value"
+      ],
+      "then": [
+        {
+          "get_url": "https://api.github.com/repos/{{repo}}/issues",
+          "method": "POST",
+          "headers": {
+            "Authorization": "Bearer {{tok}}",
+            "Accept": "application/vnd.github+json"
+          },
+          "json": {
+            "title": "{{title}}",
+            "body": "{{body}}\n\n_sent from iPhone_"
+          },
+          "as": "resp"
+        },
+        {
+          "get": "{{resp}}",
+          "key": "html_url",
+          "as": "link"
+        },
+        {
+          "notify": "🐙 Issue filed",
+          "body": "{{link}}"
+        }
+      ]
+    }
+  ]
+}

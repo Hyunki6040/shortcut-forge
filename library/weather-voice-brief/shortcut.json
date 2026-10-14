@@ -1,0 +1,18 @@
+{
+  "name": "Weather Voice Brief",
+  "version": "1.0.0",
+  "color": "lightblue",
+  "actions": [
+    {
+      "weather": true,
+      "as": "w"
+    },
+    {
+      "llm": "In 2 short sentences, tell me what to wear and whether to take an umbrella. Weather: {{w}}",
+      "as": "tip"
+    },
+    {
+      "speak": "{{tip}}"
+    }
+  ]
+}

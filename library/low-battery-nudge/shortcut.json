@@ -1,0 +1,42 @@
+{
+  "name": "Low Battery Nudge",
+  "version": "1.0.0",
+  "color": "red",
+  "actions": [
+    {
+      "battery": true,
+      "as": "b"
+    },
+    {
+      "if": [
+        "{{b}}",
+        "<",
+        10
+      ],
+      "then": [
+        {
+          "vibrate": true
+        },
+        {
+          "notify": "🪫 {{b}}%",
+          "body": "Charge now"
+        }
+      ],
+      "else": [
+        {
+          "if": [
+            "{{b}}",
+            "<",
+            20
+          ],
+          "then": [
+            {
+              "notify": "🔋 {{b}}%",
+              "body": "Consider Low Power Mode"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "water-log",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Water Log",
+  "category": "health",
+  "tags": [
+    "apple-health",
+    "template"
+  ],
+  "description": "200/350/500 mL buttons, logs to Apple Health, keeps today's total.",
+  "description_ko": "200/350/500mL 버튼으로 건강 앱에 기록하고 오늘 총량을 보여줍니다."
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Meeting to Actions",
+  "version": "1.0.0",
+  "color": "blue",
+  "actions": [
+    {
+      "ask": "Meeting notes",
+      "as": "notes"
+    },
+    {
+      "llm": "List the action items from these notes, one per line, no numbering, max 7. If none, output NONE.\n\n{{notes}}",
+      "as": "items"
+    },
+    {
+      "llm": "Summarise these meeting notes in 3 bullet points.\n\n{{notes}}",
+      "as": "summary"
+    },
+    {
+      "if": [
+        "{{items}}",
+        "is not",
+        "NONE"
+      ],
+      "then": [
+        {
+          "split": "{{items}}",
+          "as": "lines"
+        },
+        {
+          "repeat_each": "{{lines}}",
+          "do": [
+            {
+              "reminder_add": "{{RepeatItem}}",
+              "list_name": "Inbox"
+            }
+          ]
+        },
+        {
+          "count": "{{lines}}",
+          "as": "n"
+        },
+        {
+          "notify": "✅ {{n}} action items added",
+          "body": "Summary copied to clipboard"
+        }
+      ]
+    },
+    {
+      "clipboard_set": "{{summary}}"
+    }
+  ]
+}

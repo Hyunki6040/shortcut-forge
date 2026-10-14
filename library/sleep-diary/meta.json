@@ -1,0 +1,14 @@
+{
+  "slug": "sleep-diary",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Sleep Diary",
+  "category": "health",
+  "tags": [
+    "journal",
+    "apple-intelligence"
+  ],
+  "description": "Rate last night in two taps; ask for a weekly pattern read any time.",
+  "description_ko": "어젯밤 수면을 두 번 탭으로 기록하고, 원할 때 한 주 패턴을 읽어 줍니다."
+}

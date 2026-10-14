@@ -9,7 +9,8 @@ from shortcut_forge.lint import summarize
 from shortcut_forge.refs import tok
 from shortcut_forge.templates import TEMPLATES
 
-EX = Path(__file__).parent.parent / "examples"
+ROOT = Path(__file__).parent.parent
+LIB = ROOT / "library"
 
 
 def ids(sc):
@@ -108,13 +109,56 @@ def test_lint_catches_classic_mistakes():
     assert {"SF001", "SF002", "SF003", "SF004", "SF010"} <= rules
 
 
-@pytest.mark.parametrize("path", sorted(EX.glob("*.json")))
-def test_examples_build_without_errors(path, tmp_path):
+@pytest.mark.parametrize("path", sorted(LIB.glob("*/shortcut.json")), ids=lambda p: p.parent.name)
+def test_library_specs_build_without_errors(path, tmp_path):
     sc = build_from_spec(json.loads(path.read_text()))
     out = tmp_path / "x.shortcut"
     sc.save(str(out))
     plistlib.loads(out.read_bytes())
     assert not errors(sc), summarize(sc.lint())
+
+
+def test_library_entries_have_valid_meta():
+    from shortcut_forge import library
+    entries = library.discover(LIB)
+    assert len(entries) >= 15
+    for e in entries:
+        rep = library.check(e)
+        assert not rep["meta_errors"], (e.slug, rep["meta_errors"])
+        assert not rep["errors"], (e.slug, rep)
+
+
+def test_library_scaffold_and_index(tmp_path):
+    from shortcut_forge import library
+    spec = {"name": "T", "actions": [{"notify": "hi"}]}
+    meta = {"name": "T", "description": "d", "author": "me", "category": "test"}
+    library.scaffold(tmp_path, "t-one", spec, meta)
+    text = library.write_index(tmp_path)
+    assert "**T**" in text
+    with pytest.raises(ValueError):
+        library.scaffold(tmp_path, "Bad Slug", spec, meta)
+
+
+def test_update_check_and_remote_config_are_daily_and_cached():
+    sc = Shortcut()
+    sc.update_check("1.0.0", "https://example.com/m.json")
+    cfg = sc.remote_config("https://example.com/c.json")
+    assert ids(sc).count("downloadurl") == 2
+    assert not [f for f in sc.lint() if f.rule == "SF014"]
+
+
+def test_bare_network_call_is_flagged():
+    sc = Shortcut()
+    sc.get_url("https://example.com")
+    assert [f for f in sc.lint() if f.rule == "SF014"]
+
+
+def test_raw_escape_hatch_converts_refs():
+    sc = Shortcut()
+    t = sc.text("x")
+    r = sc.raw("is.workflow.actions.speaktext", None, WFText=f"say {t}")
+    p = sc.actions[-1]["WFWorkflowActionParameters"]
+    assert p["WFText"]["WFSerializationType"] == "WFTextTokenString" and r is None
 
 
 @pytest.mark.parametrize("name", list(TEMPLATES))

@@ -1,7 +1,8 @@
 """MCP server: lets Claude (or any MCP client) design, lint, inspect and sign Apple Shortcuts.
 
 Run:  shortcut-forge-mcp          (stdio)
-      shortcut-forge-mcp --http   (streamable HTTP, for remote connectors)
+      shortcut-forge-mcp --http [--port 8765] [--host 127.0.0.1]   (streamable HTTP, for ChatGPT/remote connectors)
+      shortcut-forge-mcp --print-prompt   (system prompt for chatbots without MCP)
 """
 from __future__ import annotations
 
@@ -18,7 +19,7 @@ try:  # mcp >= 2
 except ImportError:  # mcp 1.x
     from mcp.server.fastmcp import FastMCP as _Server  # type: ignore
 
-from . import __version__, health, sign as signing, templates
+from . import __version__, health, library, sign as signing, templates
 from .inspect import outline_file
 from .lint import RULES, lint_file, summarize
 from .spec import SpecError, build_from_spec, spec_reference
@@ -31,7 +32,11 @@ Workflow:
 2. Call `shortcut_build` with a JSON spec. It always lints; fix every error it reports and rebuild.
 3. On macOS set sign=true to get a file the iPhone can import (AirDrop / iCloud Drive). Elsewhere, tell the
    user to sign on a Mac: `shortcuts sign -m anyone -i in.shortcut -o out.shortcut`.
-4. For common needs use `shortcut_from_template` (supplement-tracker, water-log).
+4. Before building from scratch, check `shortcut_library(query)`: 20+ community shortcuts to start from.
+   Templates: `shortcut_from_template` (supplement-tracker, water-log).
+5. After the user is happy, offer `shortcut_submit` so they can share it in the open-source library.
+6. Need updates without re-downloading? Put changing data in a JSON URL (`remote_config` step) and use
+   `shortcut_publish` (macOS) so installed copies get an in-shortcut update prompt.
 Ask the user before writing to Health or Reminders on their behalf only if the request is ambiguous.
 Never claim a shortcut was tested on a device unless the user confirms it ran.
 """
@@ -133,7 +138,7 @@ def shortcut_sign(path: str, output_path: str | None = None, mode: str = "anyone
 
 @mcp.tool()
 def shortcut_reference(topic: str = "spec") -> str:
-    """Docs for building shortcuts. topic: spec | pitfalls | lint-rules | health-types | templates | ios27."""
+    """Docs for building shortcuts. topic: spec | pitfalls | lint-rules | health-types | templates | library | ios27."""
     topic = topic.lower()
     if topic == "spec":
         return spec_reference()
@@ -148,9 +153,83 @@ def shortcut_reference(topic: str = "spec") -> str:
         return "\n\n".join(f"## {n}\n{(m.__doc__ or '').strip()}\n\nExample config:\n"
                            f"{json.dumps(m.EXAMPLE_CONFIG, ensure_ascii=False, indent=1)}"
                            for n, m in templates.TEMPLATES.items())
+    if topic == "library":
+        return "\n".join(f"{r['slug']}: {r['description']}" for r in library.as_listing(library.discover()))
     if topic in ("ios27", "ios"):
         return _data("IOS27.md")
     return "unknown topic; use spec | pitfalls | lint-rules | health-types | templates | ios27"
+
+
+@mcp.tool()
+def shortcut_library(query: str = "", slug: str | None = None) -> dict:
+    """Browse the community shortcut library (20+ ready shortcuts: productivity, health, money, dev, home...).
+
+    No slug: list entries matching `query` (name/description/tags). With slug: return its meta, its spec
+    (or template config) to use as a starting point, and the signed download link if published."""
+    entries = library.discover()
+    if slug:
+        e = next((x for x in entries if x.slug == slug), None)
+        if not e:
+            return {"error": f"no entry {slug!r}"}
+        out: dict[str, Any] = {"meta": e.meta, "kind": e.kind, "manifest": library.manifest_for(e)}
+        for fn in ("shortcut.json", "template.json"):
+            p = e.path / fn
+            if p.exists():
+                out[fn] = json.loads(p.read_text(encoding="utf-8"))
+        return out
+    q = query.lower()
+    rows = [r for r in library.as_listing(entries)
+            if not q or q in json.dumps(r, ensure_ascii=False).lower()]
+    return {"count": len(rows), "entries": rows,
+            "contribute": "Built something good? Call shortcut_submit to package it for the library."}
+
+
+@mcp.tool()
+def shortcut_submit(slug: str, spec: dict, name: str, description: str, author: str, category: str,
+                    description_ko: str = "", tags: list[str] | None = None) -> dict:
+    """Package a shortcut for the open-source library (github.com/Hyunki6040/shortcut-forge/library).
+
+    Validates the spec and metadata, lints it, and returns the exact files plus the git/gh commands to open
+    a pull request. Encourage the user to run it on their iPhone first and fill `verified_on`."""
+    meta = {"name": name, "description": description, "description_ko": description_ko, "author": author,
+            "category": category, "tags": tags or []}
+    try:
+        return library.submission_bundle(slug, spec, meta)
+    except (SpecError, ValueError) as e:
+        return {"ok": False, "error": str(e)}
+
+
+@mcp.tool()
+def shortcut_publish(spec: dict, version: str, base_url: str, output_dir: str | None = None,
+                     notes: str = "") -> dict:
+    """macOS: build + sign + write manifest.json so installed copies can update themselves.
+
+    Adds a daily update check (spec.update_manifest = base_url/manifest.json) to the shortcut. Host the
+    two output files at base_url (GitHub raw/Pages/S3). Bump `version` for every release."""
+    import hashlib
+    if not signing.can_sign():
+        return {"error": "publish needs macOS (signing)."}
+    base = base_url.rstrip("/") + "/"
+    spec = {**spec, "version": version}
+    spec.setdefault("update_manifest", base + "manifest.json")
+    try:
+        sc = build_from_spec(spec)
+    except SpecError as e:
+        return {"error": str(e)}
+    d = output_dir or os.path.join(_out_dir(), _safe_name(sc.name))
+    os.makedirs(d, exist_ok=True)
+    res = _finish(sc, os.path.join(d, "." + _safe_name(sc.name) + ".unsigned.shortcut"), True, "anyone")
+    if not res.get("signed"):
+        return res
+    signed = res["signed_path"]
+    manifest = {"name": sc.name, "version": version,
+                "url": base + os.path.basename(signed).replace(" ", "%20"),
+                "sha256": hashlib.sha256(open(signed, "rb").read()).hexdigest(), "notes": notes}
+    mpath = os.path.join(d, "manifest.json")
+    with open(mpath, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+    return {**res, "manifest_path": mpath, "manifest": manifest,
+            "next": f"Upload {os.path.basename(signed)} and manifest.json to {base}"}
 
 
 @mcp.resource("shortcut-forge://pitfalls")
@@ -173,6 +252,22 @@ def design_shortcut(goal: str) -> str:
             "3-6 bullets, then call shortcut_build, fix lint errors, and sign it if on macOS.")
 
 
+def llm_prompt() -> str:
+    """A self-contained system prompt so ChatGPT / Gemini / any chatbot can write specs without MCP."""
+    return (
+        "You write Apple Shortcuts as JSON specs for shortcut-forge (github.com/Hyunki6040/shortcut-forge).\n"
+        "Output ONE JSON object in a ```json block, nothing else after it. The user will drop it into\n"
+        "iCloud Drive/Shortcut Forge (a Mac signs it automatically) or run `shortcut-forge build spec.json --sign`.\n\n"
+        + spec_reference() + "\n\nRules that keep shortcuts working on a real iPhone:\n" + _data("PITFALLS.md")
+    )
+
+
+@mcp.tool()
+def shortcut_llm_prompt() -> str:
+    """Return a copy-paste system prompt that teaches any chatbot (ChatGPT, Gemini...) to write specs."""
+    return llm_prompt()
+
+
 def _data(name: str) -> str:
     return resources.files("shortcut_forge").joinpath("data", name).read_text(encoding="utf-8")
 
@@ -182,7 +277,15 @@ def main() -> None:
         print(__version__)
         return
     if "--http" in sys.argv:
-        mcp.run("streamable-http")
+        port = int(sys.argv[sys.argv.index("--port") + 1]) if "--port" in sys.argv else 8765
+        host = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv else "127.0.0.1"
+        try:  # mcp >= 2
+            mcp.run("streamable-http", host=host, port=port)
+        except TypeError:  # mcp 1.x reads host/port from settings
+            mcp.settings.host, mcp.settings.port = host, port  # type: ignore[attr-defined]
+            mcp.run("streamable-http")
+    elif "--print-prompt" in sys.argv:
+        print(llm_prompt())
     else:
         mcp.run()
 

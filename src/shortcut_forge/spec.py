@@ -1,6 +1,6 @@
 """Declarative JSON spec -> Shortcut. This is what the MCP tools accept from an LLM.
 
-A spec is ``{"name": ..., "actions": [step, ...]}``. Each step is an object whose
+A spec is ``{"name": ..., "version": "1.0.0", "description": ..., "update_manifest": url?, "actions": [step, ...]}``. Each step is an object whose
 first known key is the step type. Text fields accept ``{{Variable}}`` templates;
 ``"as": "name"`` stores the step's result in a named variable.
 
@@ -33,7 +33,7 @@ STEP_DOCS: dict[str, str] = {
     "dict": '{"dict": {"a": {"b": 1}}, "as": "db"}',
     "get": '{"get": "{{db}}", "key": "a.b", "as": "v"}  (dotted keys are fetched level by level)',
     "set_key": '{"set_key": "dbVar", "key": "k", "value": "v"}',
-    "date": '{"date": "yyyy-MM-dd", "offset_days": 1, "as": "tomorrow"}',
+    "date": '{"date": "yyyy-MM-dd", "offset_days": 1, "as": "tomorrow"}  (also offset_minutes / offset_hours; "from": "{{d}}")',
     "math": '{"math": ["{{a}}", "+", "1"], "as": "b"}  ops: + - × ÷ (or * /)',
     "count": '{"count": "{{listVar}}", "as": "n"}',
     "split": '{"split": "{{text}}", "separator": "New Lines", "as": "lines"}',
@@ -50,6 +50,23 @@ STEP_DOCS: dict[str, str] = {
     "reminder_add": '{"reminder_add": "Title", "notes": "", "alert_at": "{{tomorrow}} 08:00", "if_missing": "phrase"}',
     "reminders_complete": '{"reminders_complete": "{{found}}"}',
     "run_shortcut": '{"run_shortcut": "Other Shortcut", "input": "{{x}}", "as": "result"}',
+    "url": '{"url": "https://example.com/{{id}}", "as": "link"}',
+    "get_url": '{"get_url": "https://api.example.com", "method": "GET|POST", "json": {"k": "v"}, "headers": {"Authorization": "Bearer {{token}}"}, "as": "resp"}',
+    "clipboard_get": '{"clipboard_get": true, "as": "clip"}',
+    "clipboard_set": '{"clipboard_set": "{{text}}"}',
+    "speak": '{"speak": "Good morning {{name}}"}',
+    "share": '{"share": "{{x}}"}',
+    "wait": '{"wait": 2}',
+    "vibrate": '{"vibrate": true}',
+    "battery": '{"battery": true, "as": "level"}',
+    "location": '{"location": true, "as": "here"}',
+    "weather": '{"weather": true, "as": "w"}',
+    "list": '{"list": ["A", "B"], "as": "options"}',
+    "open_app": '{"open_app": "com.apple.mobilenotes", "name": "Notes"}',
+    "calendar_add": '{"calendar_add": "Focus block", "start": "{{d}} 09:00", "end": "{{d}} 10:00", "notes": ""}',
+    "remote_config": '{"remote_config": "https://example.com/config.json", "cache_key": "cfg", "as": "cfg"}  (fetched once a day, cached)',
+    "update_check": '{"update_check": "1.2.0", "manifest": "https://.../manifest.json"}  (daily; offers to open the new version)',
+    "raw": '{"raw": "is.workflow.actions.xyz", "params": {"WFKey": "value {{var}}"}, "output": "Output Name", "as": "x"}  (escape hatch for any action)',
 }
 
 
@@ -61,7 +78,12 @@ def build_from_spec(spec: dict) -> Shortcut:
     if not isinstance(spec, dict) or "actions" not in spec:
         raise SpecError('spec must be an object with "actions": [...]')
     sc = Shortcut(spec.get("name", "Shortcut"), color=spec.get("color", "blue"), glyph=spec.get("glyph", 59511),
-                  storage_prefix=spec.get("storage_prefix", ""))
+                  storage_prefix=spec.get("storage_prefix", ""), version=spec.get("version"))
+    if spec.get("description") or spec.get("version"):
+        sc.comment(f"{sc.name} {spec.get('version', '')}\n{spec.get('description', '')}\n— built with shortcut-forge "
+                   "(github.com/Hyunki6040/shortcut-forge)".strip())
+    if spec.get("update_manifest") and spec.get("version"):
+        sc.update_check(str(spec["version"]), spec["update_manifest"])
     _run(sc, spec["actions"], "actions")
     return sc
 
@@ -120,8 +142,12 @@ def _repeat(sc: Shortcut, s: dict, where: str):
 
 def _date(sc: Shortcut, s: dict, where: str):
     d = None
-    if s.get("offset_days"):
-        d = sc.adjust_date(s["offset_days"], "days", s.get("from"))
+    for key, unit in (("offset_minutes", "min"), ("offset_hours", "hr"), ("offset_days", "days")):
+        if s.get(key):
+            d = sc.adjust_date(s[key], unit, s.get("from"))
+            break
+    if d is not None:
+        pass
     elif s.get("from"):
         d = s["from"]
     return sc.format_date(s["date"], d)
@@ -172,6 +198,25 @@ HANDLERS: dict[str, Callable[[Shortcut, dict, str], Any]] = {
     "reminder_add": _reminder_add,
     "reminders_complete": lambda sc, s, w: sc.reminders_complete(s["reminders_complete"]),
     "run_shortcut": lambda sc, s, w: sc.run_shortcut(s["run_shortcut"], s.get("input")),
+    "url": lambda sc, s, w: sc.url(s["url"]),
+    "get_url": lambda sc, s, w: sc.get_url(s["get_url"], method=s.get("method", "GET"), json_body=s.get("json"),
+                                          headers=s.get("headers")),
+    "clipboard_get": lambda sc, s, w: sc.get_clipboard(),
+    "clipboard_set": lambda sc, s, w: sc.set_clipboard(s["clipboard_set"]),
+    "speak": lambda sc, s, w: sc.speak(s["speak"]),
+    "share": lambda sc, s, w: sc.share(s["share"]),
+    "wait": lambda sc, s, w: sc.wait(float(s["wait"])),
+    "vibrate": lambda sc, s, w: sc.vibrate(),
+    "battery": lambda sc, s, w: sc.battery_level(),
+    "location": lambda sc, s, w: sc.current_location(),
+    "weather": lambda sc, s, w: sc.weather(),
+    "list": lambda sc, s, w: sc.list_(s["list"]),
+    "open_app": lambda sc, s, w: sc.open_app(s["open_app"], s.get("name")),
+    "calendar_add": lambda sc, s, w: sc.calendar_add(s["calendar_add"], s["start"], s["end"], notes=s.get("notes"),
+                                                     calendar=s.get("calendar")),
+    "remote_config": lambda sc, s, w: sc.remote_config(s["remote_config"], s.get("cache_key", "remote_config")),
+    "update_check": lambda sc, s, w: sc.update_check(str(s["update_check"]), s["manifest"]),
+    "raw": lambda sc, s, w: sc.raw(s["raw"], s.get("output"), **s.get("params", {})),
 }
 
 

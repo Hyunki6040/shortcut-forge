@@ -1,0 +1,44 @@
+{
+  "name": "Clipboard Translate",
+  "version": "1.0.0",
+  "color": "teal",
+  "actions": [
+    {
+      "clipboard_get": true,
+      "as": "src"
+    },
+    {
+      "menu": "Translate to",
+      "cases": {
+        "한국어": [
+          {
+            "set": "lang",
+            "to": "Korean"
+          }
+        ],
+        "English": [
+          {
+            "set": "lang",
+            "to": "English"
+          }
+        ],
+        "日本語": [
+          {
+            "set": "lang",
+            "to": "Japanese"
+          }
+        ]
+      }
+    },
+    {
+      "llm": "Translate into natural {{lang}}. Output only the translation.\n\n{{src}}",
+      "as": "out"
+    },
+    {
+      "clipboard_set": "{{out}}"
+    },
+    {
+      "show": "{{out}}"
+    }
+  ]
+}

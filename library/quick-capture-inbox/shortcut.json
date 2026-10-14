@@ -1,0 +1,19 @@
+{
+  "name": "Quick Capture",
+  "version": "1.0.0",
+  "color": "yellow",
+  "actions": [
+    {
+      "ask": "Capture",
+      "as": "thought"
+    },
+    {
+      "reminder_add": "{{thought}}",
+      "list_name": "Inbox"
+    },
+    {
+      "notify": "📥 Captured",
+      "body": "{{thought}}"
+    }
+  ]
+}

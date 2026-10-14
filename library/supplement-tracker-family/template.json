@@ -1,0 +1,110 @@
+{
+  "template": "supplement-tracker",
+  "config": {
+    "name": "Supplement Check",
+    "lang": "en",
+    "word": "supplements",
+    "users": {
+      "Alex": {
+        "emoji": "🩵",
+        "slots": [
+          {
+            "id": "morning",
+            "label": "Morning",
+            "emoji": "🌅",
+            "time": "08:00",
+            "window": [
+              0,
+              11
+            ],
+            "items": [
+              "Probiotic 1 capsule"
+            ],
+            "nutrients": {},
+            "note": "after breakfast"
+          },
+          {
+            "id": "lunch",
+            "label": "Lunch",
+            "emoji": "🍱",
+            "time": "12:30",
+            "window": [
+              11,
+              16
+            ],
+            "items": [
+              "Vitamin D 2000 IU",
+              "Multivitamin 1 tablet",
+              "Omega-3 1 capsule"
+            ],
+            "nutrients": {
+              "Vitamin D": 50,
+              "Vitamin C": 100,
+              "Vitamin B12": 12,
+              "Folate": 400,
+              "Zinc": 8
+            },
+            "note": "with a meal that has some fat"
+          },
+          {
+            "id": "bed",
+            "label": "Bedtime",
+            "emoji": "🌙",
+            "time": "22:30",
+            "window": [
+              20,
+              24
+            ],
+            "items": [
+              "Magnesium 1 tablet"
+            ],
+            "nutrients": {
+              "Magnesium": 200
+            },
+            "note": "30-60 min before sleep"
+          }
+        ]
+      },
+      "Sam": {
+        "emoji": "💛",
+        "slots": [
+          {
+            "id": "morning",
+            "label": "Morning",
+            "emoji": "🌅",
+            "time": "07:30",
+            "window": [
+              0,
+              11
+            ],
+            "items": [
+              "Inositol 1 sachet",
+              "Probiotic 1 capsule"
+            ],
+            "nutrients": {
+              "Folate": 400
+            },
+            "note": "empty stomach after waking"
+          },
+          {
+            "id": "dinner",
+            "label": "Dinner",
+            "emoji": "🌆",
+            "time": "18:30",
+            "window": [
+              16,
+              20
+            ],
+            "items": [
+              "Iron 25 mg"
+            ],
+            "nutrients": {
+              "Iron": 25
+            },
+            "note": "keep 2h away from magnesium"
+          }
+        ]
+      }
+    }
+  }
+}

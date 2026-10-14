@@ -1,0 +1,27 @@
+{
+  "name": "Lunch Picker",
+  "version": "1.0.0",
+  "color": "orange",
+  "update_manifest": "https://raw.githubusercontent.com/Hyunki6040/shortcut-forge/main/library/lunch-picker-remote/manifest.json",
+  "actions": [
+    {
+      "remote_config": "https://raw.githubusercontent.com/Hyunki6040/shortcut-forge/main/library/lunch-picker-remote/options.json",
+      "cache_key": "lunch_cfg",
+      "as": "cfg"
+    },
+    {
+      "get": "{{cfg}}",
+      "key": "options",
+      "as": "opts"
+    },
+    {
+      "item": "{{opts}}",
+      "which": "Random Item",
+      "as": "pick"
+    },
+    {
+      "notify": "🍱 Today: {{pick}}",
+      "body": "Not feeling it? Run again."
+    }
+  ]
+}

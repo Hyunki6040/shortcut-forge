@@ -1,0 +1,110 @@
+{
+  "name": "Expense Log",
+  "version": "1.0.0",
+  "color": "green",
+  "actions": [
+    {
+      "menu": "💸 Expenses",
+      "cases": {
+        "Add expense": [
+          {
+            "ask": "Amount",
+            "kind": "Number",
+            "as": "amt"
+          },
+          {
+            "menu": "Category",
+            "cases": {
+              "🍚 Food": [
+                {
+                  "set": "cat",
+                  "to": "food"
+                }
+              ],
+              "🚇 Transport": [
+                {
+                  "set": "cat",
+                  "to": "transport"
+                }
+              ],
+              "☕️ Cafe": [
+                {
+                  "set": "cat",
+                  "to": "cafe"
+                }
+              ],
+              "🛍 Other": [
+                {
+                  "set": "cat",
+                  "to": "other"
+                }
+              ]
+            }
+          },
+          {
+            "date": "yyyy-MM-dd",
+            "as": "d"
+          },
+          {
+            "storage_get": "expenses",
+            "as": "csv"
+          },
+          {
+            "if": [
+              "{{csv}}",
+              "has any value"
+            ],
+            "then": [
+              {
+                "set": "csv",
+                "to": "{{csv}}\n{{d}},{{cat}},{{amt}}"
+              }
+            ],
+            "else": [
+              {
+                "set": "csv",
+                "to": "date,category,amount\n{{d}},{{cat}},{{amt}}"
+              }
+            ]
+          },
+          {
+            "storage_set": "expenses",
+            "value": "{{csv}}"
+          },
+          {
+            "notify": "💸 {{amt}} · {{cat}}"
+          }
+        ],
+        "Copy CSV": [
+          {
+            "storage_get": "expenses",
+            "as": "csv"
+          },
+          {
+            "clipboard_set": "{{csv}}"
+          },
+          {
+            "notify": "📋 CSV copied"
+          }
+        ],
+        "Month summary": [
+          {
+            "storage_get": "expenses",
+            "as": "csv"
+          },
+          {
+            "date": "yyyy-MM",
+            "as": "m"
+          },
+          {
+            "llm": "From this CSV, total per category for {{m}} and the overall total. Plain text table.\n\n{{csv}}",
+            "as": "s"
+          },
+          {
+            "show": "{{s}}"
+          }
+        ]
+      }
+    }
+  ]
+}

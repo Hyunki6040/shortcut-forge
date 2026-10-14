@@ -1,0 +1,90 @@
+{
+  "name": "Sleep Diary",
+  "version": "1.0.0",
+  "color": "darkblue",
+  "actions": [
+    {
+      "menu": "Sleep diary",
+      "cases": {
+        "Log last night": [
+          {
+            "menu": "Quality?",
+            "cases": {
+              "😴 Deep": [
+                {
+                  "set": "q",
+                  "to": "deep"
+                }
+              ],
+              "🙂 Fine": [
+                {
+                  "set": "q",
+                  "to": "fine"
+                }
+              ],
+              "😵 Bad": [
+                {
+                  "set": "q",
+                  "to": "bad"
+                }
+              ]
+            }
+          },
+          {
+            "ask": "Hours slept",
+            "kind": "Number",
+            "default": "7",
+            "as": "h"
+          },
+          {
+            "date": "yyyy-MM-dd",
+            "as": "d"
+          },
+          {
+            "storage_get": "sleep_log",
+            "as": "log"
+          },
+          {
+            "if": [
+              "{{log}}",
+              "has any value"
+            ],
+            "then": [
+              {
+                "set": "log",
+                "to": "{{log}}\n{{d}} {{h}}h {{q}}"
+              }
+            ],
+            "else": [
+              {
+                "set": "log",
+                "to": "{{d}} {{h}}h {{q}}"
+              }
+            ]
+          },
+          {
+            "storage_set": "sleep_log",
+            "value": "{{log}}"
+          },
+          {
+            "notify": "🌙 Saved",
+            "body": "{{h}}h · {{q}}"
+          }
+        ],
+        "Weekly read": [
+          {
+            "storage_get": "sleep_log",
+            "as": "log"
+          },
+          {
+            "llm": "From this sleep log, using the last 7 entries: average hours, best and worst night, one habit to try. 5 lines max. No medical advice.\n\n{{log}}",
+            "as": "r"
+          },
+          {
+            "show": "{{r}}"
+          }
+        ]
+      }
+    }
+  ]
+}

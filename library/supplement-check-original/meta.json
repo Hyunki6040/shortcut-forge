@@ -1,0 +1,13 @@
+{
+  "slug": "supplement-check-original",
+  "name": "영양제 체크 (원본)",
+  "author": "Hyunki6040",
+  "category": "health",
+  "tags": ["apple-health", "reminders", "stored-content", "apple-intelligence", "multi-user", "korean", "real-world"],
+  "ios": "27",
+  "version": "6.0.0",
+  "verified_on": "iPhone, iOS 27.0 (Oct 2026)",
+  "description": "The real 1,073-action shortcut that started this project: a couple's supplement routine (5 slots each), alternate-day iron/magnesium, Apple Health logging with mcg→mg, today's reminder completed and tomorrow's created for every slot only if missing, first-run setup + settings in Stored Content, 7-day Apple Intelligence report. Korean UI.",
+  "description_ko": "이 프로젝트의 출발점이 된 실제 단축어(동작 1,073개). 부부 각자 5개 시간대, 격일 성분 자동 판단, 건강 앱 기록(mcg→mg), 오늘 미리알림 완료와 내일 미리알림 일괄 생성(중복 없음), 저장공간 기반 첫 실행 설정·설정 메뉴, Apple Intelligence 7일 리포트.",
+  "changelog": "v6: tomorrow's reminders for all slots at once, skip existing; mcg→mg fix; separate inositol-free morning option; pre-lunch psyllium slot."
+}

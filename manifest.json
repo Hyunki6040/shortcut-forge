@@ -1,22 +1,41 @@
 {
   "manifest_version": "0.3",
   "name": "shortcut-forge",
-  "display_name": "Shortcut Forge",
-  "version": "0.1.0",
-  "description": "Let Claude build, lint and sign Apple Shortcuts you can import on iPhone.",
+  "display_name": "Shortcut Forge: Apple Shortcuts MCP",
+  "version": "0.2.0",
+  "description": "Apple Shortcuts MCP: build, lint and sign iOS Shortcuts (.shortcut) that actually run on iPhone.",
   "long_description": "Describe an automation in plain language. Claude designs it, shortcut-forge emits a real .shortcut plist that avoids known on-device failures (Stored Content, Health units, Reminders, If comparisons), lints it, and signs it with the macOS shortcuts CLI.",
-  "author": { "name": "Robert Kim", "url": "https://github.com/Hyunki6040" },
-  "repository": { "type": "git", "url": "https://github.com/Hyunki6040/shortcut-forge" },
+  "author": {
+    "name": "Robert Kim",
+    "url": "https://github.com/Hyunki6040"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hyunki6040/shortcut-forge"
+  },
   "homepage": "https://github.com/Hyunki6040/shortcut-forge",
   "license": "MIT",
-  "keywords": ["shortcuts", "ios", "apple-health", "automation"],
+  "keywords": [
+    "shortcuts",
+    "ios",
+    "apple-health",
+    "automation"
+  ],
   "server": {
     "type": "python",
     "entry_point": "src/shortcut_forge/server.py",
     "mcp_config": {
       "command": "uv",
-      "args": ["run", "--quiet", "--directory", "${__dirname}", "shortcut-forge-mcp"],
-      "env": { "SHORTCUT_FORGE_OUT": "${user_config.output_dir}" }
+      "args": [
+        "run",
+        "--quiet",
+        "--directory",
+        "${__dirname}",
+        "shortcut-forge-mcp"
+      ],
+      "env": {
+        "SHORTCUT_FORGE_OUT": "${user_config.output_dir}"
+      }
     }
   },
   "user_config": {
@@ -29,12 +48,48 @@
     }
   },
   "tools": [
-    { "name": "shortcut_build", "description": "Build a .shortcut from a JSON spec, lint it, optionally sign it" },
-    { "name": "shortcut_from_template", "description": "Supplement tracker / water log templates" },
-    { "name": "shortcut_lint", "description": "Check a shortcut for known on-device failure patterns" },
-    { "name": "shortcut_inspect", "description": "Readable outline of a shortcut" },
-    { "name": "shortcut_sign", "description": "Sign with the macOS shortcuts CLI" },
-    { "name": "shortcut_reference", "description": "Spec, pitfalls, lint rules, Health types, iOS 27 notes" }
+    {
+      "name": "shortcut_build",
+      "description": "Build a .shortcut from a JSON spec, lint it, optionally sign it"
+    },
+    {
+      "name": "shortcut_from_template",
+      "description": "Supplement tracker / water log templates"
+    },
+    {
+      "name": "shortcut_lint",
+      "description": "Check a shortcut for known on-device failure patterns"
+    },
+    {
+      "name": "shortcut_inspect",
+      "description": "Readable outline of a shortcut"
+    },
+    {
+      "name": "shortcut_sign",
+      "description": "Sign with the macOS shortcuts CLI"
+    },
+    {
+      "name": "shortcut_reference",
+      "description": "Spec, pitfalls, lint rules, Health types, iOS 27 notes"
+    },
+    {
+      "name": "shortcut_library",
+      "description": "Browse 20+ community shortcuts to start from"
+    },
+    {
+      "name": "shortcut_submit",
+      "description": "Package your shortcut for the open-source library"
+    },
+    {
+      "name": "shortcut_publish",
+      "description": "Sign + manifest so installed copies can update"
+    }
   ],
-  "compatibility": { "platforms": ["darwin", "linux", "win32"] }
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "linux",
+      "win32"
+    ]
+  }
 }

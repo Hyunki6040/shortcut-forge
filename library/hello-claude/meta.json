@@ -1,0 +1,14 @@
+{
+  "slug": "hello-claude",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Hello Claude",
+  "category": "starter",
+  "tags": [
+    "starter",
+    "stored-content"
+  ],
+  "description": "The 9-action hello world: ask, branch, remember the answer in iOS 27 Stored Content.",
+  "description_ko": "9개 동작짜리 헬로 월드. 묻고, 분기하고, iOS 27 저장공간에 기억합니다."
+}

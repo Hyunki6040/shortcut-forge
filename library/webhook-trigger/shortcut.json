@@ -1,0 +1,58 @@
+{
+  "name": "Webhook Trigger",
+  "version": "1.0.0",
+  "color": "gray",
+  "actions": [
+    {
+      "storage_get": "webhook_url",
+      "as": "url"
+    },
+    {
+      "if": [
+        "{{url}}",
+        "does not have any value"
+      ],
+      "then": [
+        {
+          "ask": "Webhook URL",
+          "kind": "URL",
+          "as": "url"
+        },
+        {
+          "storage_set": "webhook_url",
+          "value": "{{url}}"
+        }
+      ]
+    },
+    {
+      "ask": "Message",
+      "as": "msg"
+    },
+    {
+      "date": "yyyy-MM-dd'T'HH:mm:ss",
+      "as": "ts"
+    },
+    {
+      "if": [
+        "{{msg}}",
+        "has any value"
+      ],
+      "then": [
+        {
+          "get_url": "{{url}}",
+          "method": "POST",
+          "json": {
+            "text": "{{msg}}",
+            "source": "ios-shortcut",
+            "at": "{{ts}}"
+          },
+          "as": "resp"
+        },
+        {
+          "notify": "📡 Sent",
+          "body": "{{resp}}"
+        }
+      ]
+    }
+  ]
+}

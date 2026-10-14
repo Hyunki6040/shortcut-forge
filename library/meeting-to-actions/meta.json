@@ -1,0 +1,14 @@
+{
+  "slug": "meeting-to-actions",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Meeting → Action Items",
+  "category": "productivity",
+  "tags": [
+    "apple-intelligence",
+    "reminders"
+  ],
+  "description": "Paste or dictate meeting notes; get action items as reminders and a summary on your clipboard.",
+  "description_ko": "회의 메모를 붙여넣거나 받아쓰면 할 일은 미리알림으로, 요약은 클립보드로."
+}

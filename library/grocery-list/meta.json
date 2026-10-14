@@ -1,0 +1,14 @@
+{
+  "slug": "grocery-list",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Grocery List",
+  "category": "home",
+  "tags": [
+    "stored-content",
+    "share"
+  ],
+  "description": "A shared-by-AirDrop grocery list that lives in Stored Content: add, view, share, clear.",
+  "description_ko": "저장공간에 사는 장보기 목록. 추가·보기·공유·비우기."
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "clipboard-translate",
+  "author": "Hyunki6040",
+  "ios": "27",
+  "verified_on": null,
+  "name": "Clipboard Translate",
+  "category": "language",
+  "tags": [
+    "apple-intelligence",
+    "clipboard"
+  ],
+  "description": "Translate whatever you copied (to Korean by default) with Apple Intelligence; result goes back to the clipboard.",
+  "description_ko": "복사한 문장을 Apple Intelligence로 번역(기본 한국어)해서 다시 클립보드에 넣어 줍니다."
+}
