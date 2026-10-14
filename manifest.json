@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "shortcut-forge",
   "display_name": "Shortcut Forge: Apple Shortcuts MCP",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Apple Shortcuts MCP: build, lint and sign iOS Shortcuts (.shortcut) that actually run on iPhone.",
   "long_description": "Describe an automation in plain language. Claude designs it, shortcut-forge emits a real .shortcut plist that avoids known on-device failures (Stored Content, Health units, Reminders, If comparisons), lints it, and signs it with the macOS shortcuts CLI.",
   "author": {

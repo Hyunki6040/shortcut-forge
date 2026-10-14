@@ -1,5 +1,6 @@
 """Command line.
 
+  shortcut-forge mcp [--http]                       run the MCP server (same as shortcut-forge-mcp)
   shortcut-forge build spec.json [--sign]           JSON spec -> .shortcut
   shortcut-forge template NAME [--config c.json]    ready-made templates
   shortcut-forge lint FILE | inspect FILE | sign FILE
@@ -64,6 +65,11 @@ def _publish(a) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["mcp"]:  # `uvx shortcut-forge mcp [--http ...]`
+        from . import server
+        sys.argv = ["shortcut-forge-mcp", *argv[1:]]
+        server.main()
+        return 0
     if argv[:2] == ["mac", "watch"]:
         from .mac import main_watch
         main_watch(argv[2:])

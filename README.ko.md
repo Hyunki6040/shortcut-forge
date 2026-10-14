@@ -74,15 +74,15 @@ shortcut-forge는 *이미 쓰고 있는 AI*로 더 크고, 리뷰할 수 있고,
 
 **Claude 데스크톱**: [Releases](https://github.com/Hyunki6040/shortcut-forge/releases)의 `shortcut-forge.mcpb` 더블클릭, 또는
 ```json
-{ "mcpServers": { "shortcut-forge": { "command": "uvx", "args": ["shortcut-forge-mcp"] } } }
+{ "mcpServers": { "shortcut-forge": { "command": "uvx", "args": ["shortcut-forge", "mcp"] } } }
 ```
 
 **OpenAI Codex**
 ```bash
-codex mcp add shortcut-forge -- uvx shortcut-forge-mcp
+codex mcp add shortcut-forge -- uvx shortcut-forge mcp
 ```
 
-**ChatGPT·Gemini·아무 챗봇**: HTTP로 연결(`shortcut-forge-mcp --http`)하거나, MCP 없이
+**ChatGPT·Gemini·아무 챗봇**: HTTP로 연결(`shortcut-forge mcp --http`)하거나, MCP 없이
 [`prompts/LLM_PROMPT.md`](prompts/LLM_PROMPT.md)를 붙여넣고 받은 JSON을 아래 Mac 감시 폴더에 넣으면 됩니다.
 Cursor·VS Code·Windsurf·Gemini CLI는 [docs/CLIENTS.md](docs/CLIENTS.md) 참고.
 

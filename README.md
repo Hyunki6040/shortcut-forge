@@ -86,15 +86,15 @@ shortcut-forge when you want an AI *you already use* to build something bigger, 
 
 **Claude Desktop**: double-click `shortcut-forge.mcpb` from [Releases](https://github.com/Hyunki6040/shortcut-forge/releases), or:
 ```json
-{ "mcpServers": { "shortcut-forge": { "command": "uvx", "args": ["shortcut-forge-mcp"] } } }
+{ "mcpServers": { "shortcut-forge": { "command": "uvx", "args": ["shortcut-forge", "mcp"] } } }
 ```
 
 **OpenAI Codex**
 ```bash
-codex mcp add shortcut-forge -- uvx shortcut-forge-mcp
+codex mcp add shortcut-forge -- uvx shortcut-forge mcp
 ```
 
-**ChatGPT, Gemini, any chatbot**: connect over HTTP (`shortcut-forge-mcp --http`) or, with no MCP at all, paste
+**ChatGPT, Gemini, any chatbot**: connect over HTTP (`shortcut-forge mcp --http`) or, with no MCP at all, paste
 [`prompts/LLM_PROMPT.md`](prompts/LLM_PROMPT.md) and drop the JSON it writes into the Mac watch folder (below).
 Cursor, VS Code, Windsurf, Gemini CLI: see [docs/CLIENTS.md](docs/CLIENTS.md).
 

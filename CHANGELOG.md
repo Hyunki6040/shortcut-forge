@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1 (2026-10-15)
+- `shortcut-forge mcp` subcommand so `uvx shortcut-forge mcp` works straight from PyPI (docs updated).
+
 ## 0.2.0 (2026-10-14)
 - Generalised beyond health: URL/JSON (GET/POST, headers), clipboard, speak, share, wait, vibrate, calendar, location,
   weather, battery, open app, list, plus a `raw` escape hatch for any action (53 spec step types).

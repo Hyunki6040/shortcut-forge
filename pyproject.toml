@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shortcut-forge"
-version = "0.2.0"
+version = "0.2.1"
 description = "Apple Shortcuts MCP server: let Claude, Codex or any LLM build, lint and sign real iOS Shortcuts (.shortcut) that run on iPhone. iOS 27 aware."
 readme = "README.md"
 license = "MIT"

@@ -7,12 +7,12 @@
     "url": "https://github.com/Hyunki6040/shortcut-forge",
     "source": "github"
   },
-  "version": "0.2.0",
+  "version": "0.2.1",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "shortcut-forge",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
@@ -22,6 +22,12 @@
           "name": "SHORTCUT_FORGE_OUT",
           "description": "Output folder for generated shortcuts",
           "isRequired": false
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
         }
       ]
     }

@@ -34,7 +34,7 @@
 /plugin marketplace add Hyunki6040/shortcut-forge
 /plugin install shortcut-forge@shortcut-forge
 # OpenAI Codex
-codex mcp add shortcut-forge -- uvx shortcut-forge-mcp
+codex mcp add shortcut-forge -- uvx shortcut-forge mcp
 # CLI
 uv tool install shortcut-forge
 ```
