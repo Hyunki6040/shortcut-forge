@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.Hyunki6040/shortcut-forge",
+  "title": "Shortcut Forge",
+  "description": "Build, lint and sign Apple Shortcuts (.shortcut) for iPhone from an LLM. iOS 27 aware.",
+  "repository": { "url": "https://github.com/Hyunki6040/shortcut-forge", "source": "github" },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "shortcut-forge",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        { "name": "SHORTCUT_FORGE_OUT", "description": "Output folder for generated shortcuts", "isRequired": false }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Vitamin Log",
+  "actions": [
+    {"dict": {"Vitamin D": 50, "Vitamin B12": 12, "Vitamin C": 100, "Zinc": 8}, "as": "dose"},
+    {"menu": "Log today's multivitamin?", "cases": {
+      "Yes": [
+        {"health_log_dict": "{{dose}}", "types": ["Vitamin D", "Vitamin B12", "Vitamin C", "Zinc"]},
+        {"date": "M/d", "as": "today"},
+        {"reminders_find": "Multivitamin {{today}}", "completed": false, "as": "todo"},
+        {"reminders_complete": "{{todo}}"},
+        {"notify": "💊 Logged", "body": "B12 12 mcg went in as 0.012 mg, so Health shows 12 mcg"}
+      ],
+      "Not now": []
+    }}
+  ]
+}

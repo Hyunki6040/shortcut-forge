@@ -1,0 +1,13 @@
+{
+  "name": "shortcut-forge",
+  "description": "Apple Shortcuts generator for Claude: MCP server + skill + slash command",
+  "owner": { "name": "Robert Kim (Hyunki6040)", "url": "https://github.com/Hyunki6040" },
+  "plugins": [
+    {
+      "name": "shortcut-forge",
+      "source": "./",
+      "description": "Describe an automation, get a signed .shortcut you can AirDrop to your iPhone.",
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "shortcut-forge",
+  "version": "0.1.0",
+  "description": "Build, lint and sign real Apple Shortcuts (.shortcut) from a prompt. iOS 27 Stored Content, Apple Health, Reminders, Use Model. Mac signs, iPhone imports.",
+  "author": { "name": "Robert Kim (Hyunki6040)", "url": "https://github.com/Hyunki6040" },
+  "homepage": "https://github.com/Hyunki6040/shortcut-forge",
+  "repository": "https://github.com/Hyunki6040/shortcut-forge",
+  "license": "MIT",
+  "keywords": ["apple-shortcuts", "ios", "mcp", "apple-health", "reminders", "automation"]
+}

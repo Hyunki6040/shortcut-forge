@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "shortcut-forge"
+version = "0.1.0"
+description = "Let Claude build, lint and sign real Apple Shortcuts. MCP server + Claude plugin + Python DSL, iOS 27 aware."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Robert Kim (김현기)" }]
+keywords = ["mcp", "claude", "apple-shortcuts", "ios", "shortcuts", "siri", "apple-health", "automation", "llm"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: MacOS",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Code Generators",
+  "Intended Audience :: Developers",
+]
+dependencies = ["mcp>=1.2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+shortcut-forge = "shortcut_forge.cli:main"
+shortcut-forge-mcp = "shortcut_forge.server:main"
+
+[project.urls]
+Homepage = "https://github.com/Hyunki6040/shortcut-forge"
+Issues = "https://github.com/Hyunki6040/shortcut-forge/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shortcut_forge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

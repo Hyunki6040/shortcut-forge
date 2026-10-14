@@ -1,0 +1,25 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.10", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv run --extra dev pytest -q
+      - name: Build every example and template (lint must be clean)
+        run: |
+          for f in examples/*.json; do uv run shortcut-forge build "$f" -o "/tmp/$(basename "$f" .json).unsigned.shortcut"; done
+          uv run shortcut-forge template supplement-tracker -o /tmp/supp.unsigned.shortcut
+          uv run shortcut-forge template water-log -o /tmp/water.unsigned.shortcut
+      - name: Validate plugin manifests
+        run: python -c "import json;[json.load(open(p)) for p in ['.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.mcp.json','manifest.json','server.json']]"

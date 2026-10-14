@@ -1,0 +1,17 @@
+{
+  "name": "Morning Brief",
+  "color": "orange",
+  "actions": [
+    {"comment": "Asks Apple Intelligence for a 3-line plan from what you type, keeps a 7-day log in Stored Content."},
+    {"date": "yyyy-MM-dd", "as": "today"},
+    {"ask": "What's on your mind this morning?", "as": "mood"},
+    {"llm": "Turn this into a calm 3-line plan for today ({{today}}): {{mood}}", "as": "plan"},
+    {"storage_get": "brief_log", "as": "log"},
+    {"if": ["{{log}}", "has any value"],
+     "then": [{"set": "log", "to": "{{log}}\n{{today}}: {{mood}}"}],
+     "else": [{"set": "log", "to": "{{today}}: {{mood}}"}]},
+    {"storage_set": "brief_log", "value": "{{log}}"},
+    {"reminder_add": "🌤 Review morning plan {{today}}", "notes": "{{plan}}", "if_missing": "Review morning plan {{today}}"},
+    {"show": "{{plan}}"}
+  ]
+}
